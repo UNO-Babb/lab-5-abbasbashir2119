@@ -1,35 +1,44 @@
-#Caesar Cipher
-#The Caesar cipher moves each letter forward in the alphabet by
-#the key.  The resulting message has all the letters advanced by 'key'
-#letters.
-#To run the code, run the main() function
+def caesar_cipher(text, key, decode=False):
+    """
+    Encrypts or decrypts a text using the Caesar cipher.
+    
+    Parameters:
+        text (str): The input text to process.
+        key (int): The number of positions to shift in the alphabet.
+        decode (bool): If True, the function will decrypt the text.
+                       Otherwise, it encrypts the text.
+    
+    Returns:
+        str: The processed text after shifting.
+    """
+    # If decoding, reverse the shift.
+    shift = -key if decode else key
+    result = []
+    
+    for char in text:
+        if char.isalpha():
+            # Determine the ASCII base for uppercase or lowercase.
+            base = ord('A') if char.isupper() else ord('a')
+            # Compute shifted position with wrap-around using modulo arithmetic.
+            new_char = chr((ord(char) - base + shift) % 26 + base)
+            result.append(new_char)
+        else:
+            # Non-alphabetical characters remain unchanged.
+            result.append(char)
+    
+    return ''.join(result)
 
-def encode(message, key):
-    alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    message = message.upper()
-    secret = ""
-
-    for letter in message:
-        if (alpha.find(letter) >= 0): #check to see if the letter is actually a letter
-            spot = (alpha.find(letter) + key) % 26
-            secret = secret + alpha[spot]
-        else: # letter must have been a number, symbol, or punctuation.
-            secret = secret + letter
-
-    return secret
-
-#def decode(message, key):
-    #We will want to decode the message here.
 
 def main():
     message = input("Enter a message: ")
     key = int(input("Enter a key: "))
-
-    secret = encode(message, key)
-    print ("Encrypted:", secret)
-    #plaintext = decode(secret, key)
-    #print ("Decrypted:", plaintext)
+    
+    encrypted = caesar_cipher(message, key)
+    print("Encrypted:", encrypted)
+    
+    decrypted = caesar_cipher(encrypted, key, decode=True)
+    print("Decrypted:", decrypted)
 
 
 if __name__ == '__main__':
-  main()
+    main()
